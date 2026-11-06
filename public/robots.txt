@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://fotobudka-tashkent.pages.dev/sitemap.xml
+Sitemap: https://fotobudki.uz/sitemap.xml
