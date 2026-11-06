@@ -1,0 +1,22 @@
+# Настройки кэша и безопасности для Cloudflare Pages
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Фото и иконки кэшируются на 30 дней
+/img/*
+  Cache-Control: public, max-age=2592000
+/og-image.jpg
+  Cache-Control: public, max-age=2592000
+/favicon*
+  Cache-Control: public, max-age=2592000
+/apple-touch-icon.png
+  Cache-Control: public, max-age=2592000
+
+# Стили и скрипт - на 1 час (после правок обновятся у посетителей максимум через час)
+/styles.css
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+/script.js
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
