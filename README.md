@@ -79,8 +79,8 @@ npx wrangler pages dev public
 
 Важно: на настоящем сайте без этих переменных форма покажет «Не удалось отправить. Напишите нам в Telegram» - заявки молча не теряются.
 
-## Свой домен (например pixo.uz)
-1. Купите домен у любого регистратора (для .uz - например, через uz-регистраторов).
-2. Cloudflare → ваш проект Pages → **Custom domains** → **Set up a custom domain** → введите `pixo.uz`.
-3. Cloudflare покажет, какие DNS-записи добавить (или предложит перенести домен в Cloudflare - так проще). Добавьте их у регистратора и подождите от 10 минут до суток.
-4. После подключения замените адрес `https://fotobudka-tashkent.pages.dev` на `https://pixo.uz` в `public/index.html` (верхний блок), `public/robots.txt` и `public/sitemap.xml`.
+## Домен fotobudki.uz
+- Куплен в ahost.uz. NS-серверы у регистратора: `aitana.ns.cloudflare.com`, `tadeo.ns.cloudflare.com` (DNSSEC выключен).
+- DNS домена управляется в Cloudflare (бесплатный план). Там же TXT-записи для подтверждения в Google Search Console и Яндекс Вебмастере - их не удалять.
+- Cloudflare → проект Pages → **Custom domains**: подключены `fotobudki.uz` и `www.fotobudki.uz`.
+- Адрес сайта прописан в `public/index.html` (верхний блок), `public/robots.txt` и `public/sitemap.xml`. При смене домена поменяйте его в этих трех файлах.
