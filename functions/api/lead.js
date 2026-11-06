@@ -132,25 +132,31 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: false, error: 'Отправка временно не настроена', missing }, 500);
   }
 
-  try {
-    const tg = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML', disable_web_page_preview: true }),
-    });
-    const data = await tg.json().catch(() => ({}));
-    if (!tg.ok || !data.ok) {
+  // В TELEGRAM_CHAT_ID можно вписать несколько получателей через запятую:
+  // например "123456789, 987654321, -1001234567890" - заявка придет каждому.
+  const chatIds = chatId.split(/[\s,;]+/).filter(Boolean).slice(0, 10);
+  const results = await Promise.all(chatIds.map(async (id) => {
+    try {
+      const tg = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: id, text, parse_mode: 'HTML', disable_web_page_preview: true }),
+      });
+      const data = await tg.json().catch(() => ({}));
+      if (tg.ok && data.ok) return null;
       // Описание ошибки от Telegram (например "chat not found") - без токена, его можно показывать
-      const detail = clean(data.description || `HTTP ${tg.status}`, 200);
-      console.error('Telegram ответил ошибкой:', tg.status, detail);
-      return json({ ok: false, error: 'Не удалось отправить в Telegram', detail }, 502);
+      return clean(data.description || `HTTP ${tg.status}`, 150);
+    } catch (err) {
+      return 'нет связи с Telegram';
     }
-  } catch (err) {
-    console.error('Нет связи с Telegram:', String(err));
-    return json({ ok: false, error: 'Не удалось отправить в Telegram' }, 502);
+  }));
+  const failed = results.map((r, i) => (r ? `получатель ${i + 1}: ${r}` : null)).filter(Boolean);
+  if (failed.length) console.error('Telegram ответил ошибкой:', failed.join('; '));
+  // Успех, если заявка дошла хотя бы до одного получателя
+  if (failed.length === chatIds.length) {
+    return json({ ok: false, error: 'Не удалось отправить в Telegram', detail: failed.join('; ') }, 502);
   }
-
-  return json({ ok: true });
+  return failed.length ? json({ ok: true, warnings: failed }) : json({ ok: true });
 }
 
 /* Любой другой метод (GET и т.д.) - отказ */
