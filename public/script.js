@@ -7,8 +7,8 @@
 /* Название компании: подставляется в логотип, фотополоску и подвал */
 const BRAND_NAME = 'Fotobudka Tashkent';
 
-/* Ссылка на Instagram (ЗАГЛУШКА - впишите свой аккаунт) */
-const INSTAGRAM_URL = 'https://instagram.com/ИМЯ_АККАУНТА';
+/* Ссылка на Instagram */
+const INSTAGRAM_URL = 'https://www.instagram.com/fotobudka_tashkent';
 
 /* Ссылка на Telegram */
 const TELEGRAM_URL = 'https://t.me/A7i77';
