@@ -42,11 +42,12 @@ const BRANDS = [
 const SWATCHES = ['#C8102E', '#0057B8', '#00A651', '#E8B44A', '#111111', '#F4F4F5'];
 const DEFAULT_BRAND_COLOR = '#C8102E';
 
-/* Наборы кадров для фотополоски на первом экране (файлы из img/strip/) */
+/* Наборы кадров для фотополоски на первом экране -
+   профессиональные фото из галереи (файлы из img/gallery/) */
 const STRIP_SETS = [
-  ['loreal', 'wedding', 'bosch'],
-  ['lavina', 'evos', 'graduation'],
-  ['asu', 'darkside', 'wedding'],
+  ['loreal-strips', 'wedding-day', 'bosch'],
+  ['lavina', 'evos-buxoro', 'leading'],
+  ['asu-marathon', 'darkside', 'wedding-day'],
 ];
 
 /* Темы рамок в блоке "Собери свою рамку" */
@@ -93,6 +94,13 @@ const FRAME_THEMES = [
     return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? '#0B0B0C' : '#FFFFFF';
   }
   /* Меняет картинку внутри <picture> на кадр из img/strip/ */
+  /* Меняет картинку внутри <picture> на профессиональное фото из img/gallery/ */
+  function setGalleryPicture(picture, stem) {
+    $('source', picture).srcset = `img/gallery/${stem}-600.webp 600w, img/gallery/${stem}-1200.webp 1200w`;
+    const img = $('img', picture);
+    img.srcset = `img/gallery/${stem}-600.jpg 600w, img/gallery/${stem}-1200.jpg 1200w`;
+    img.src = `img/gallery/${stem}-600.jpg`;
+  }
   function setStripPicture(picture, stem) {
     const webp = `img/strip/${stem}-320.webp 320w, img/strip/${stem}-640.webp 640w`;
     const jpg = `img/strip/${stem}-320.jpg 320w, img/strip/${stem}-640.jpg 640w`;
@@ -170,7 +178,7 @@ const FRAME_THEMES = [
         flash.hidden = true;
         shot += 1;
         const set = STRIP_SETS[shot % STRIP_SETS.length];
-        stripPictures.forEach((p, i) => setStripPicture(p, set[i]));
+        stripPictures.forEach((p, i) => setGalleryPicture(p, set[i]));
         printStrip();
         shootStatus.textContent = 'Снимок готов, фотополоска печатается';
         busy = false;
@@ -185,7 +193,7 @@ const FRAME_THEMES = [
   // Заранее подгружаем кадры следующих наборов, чтобы они появлялись без задержки
   window.addEventListener('load', () => {
     setTimeout(() => {
-      new Set(STRIP_SETS.flat()).forEach((stem) => { const i = new Image(); i.src = `img/strip/${stem}-320.webp`; });
+      new Set(STRIP_SETS.flat()).forEach((stem) => { const i = new Image(); i.src = `img/gallery/${stem}-600.webp`; });
     }, 1500);
   });
 
