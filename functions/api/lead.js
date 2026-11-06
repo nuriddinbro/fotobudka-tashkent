@@ -118,16 +118,18 @@ export async function onRequestPost({ request, env }) {
   if (page) lines.push(`Страница: ${esc(page)}`);
   const text = lines.join('\n');
 
-  const token = env.TELEGRAM_BOT_TOKEN;
-  const chatId = env.TELEGRAM_CHAT_ID;
+  const token = String(env.TELEGRAM_BOT_TOKEN || '').trim();
+  const chatId = String(env.TELEGRAM_CHAT_ID || '').trim();
 
   if (!token || !chatId) {
     if (isLocal(request.url)) {
       console.log('[ТЕСТОВЫЙ РЕЖИМ] Заявка (в Telegram не отправлена):\n' + text);
       return json({ ok: true, test: true });
     }
-    console.error('Не заданы TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID');
-    return json({ ok: false, error: 'Отправка временно не настроена' }, 500);
+    // Называем только ИМЕНА пустых переменных (значения никогда не показываем)
+    const missing = [!token && 'TELEGRAM_BOT_TOKEN', !chatId && 'TELEGRAM_CHAT_ID'].filter(Boolean);
+    console.error('Не заданы переменные:', missing.join(', '));
+    return json({ ok: false, error: 'Отправка временно не настроена', missing }, 500);
   }
 
   try {
