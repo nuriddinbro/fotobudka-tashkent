@@ -99,6 +99,13 @@ export async function onRequestPost({ request, env }) {
   const timeText = hours >= 1 && hours <= 24 && price > 0 && price < 1e10
     ? `${hours} ${hoursWord(hours)} - ${formatNumber(price)} сум`
     : 'не выбрано';
+  const BRANDINGS = ['Корпус и рамка', 'Только рамка', 'Без брендирования'];
+  const branding = BRANDINGS.includes(body.branding) ? body.branding : '';
+  // Пожелания: сохраняем переносы строк, остальное чистим, не длиннее 500 символов
+  const wishes = String(body.wishes || '')
+    .replace(/[\u0000-\u0009\u000B-\u001F\u007F]/g, ' ')
+    .split('\n').map((l) => l.replace(/\s+/g, ' ').trim()).filter(Boolean).join('\n')
+    .slice(0, 500);
   const brand = clean(body.brand, 40);
   const tag = clean(body.tag, 40);
   const color = /^#[0-9a-f]{6}$/i.test(String(body.color || '')) ? String(body.color).toUpperCase() : '';
@@ -113,8 +120,10 @@ export async function onRequestPost({ request, env }) {
     `Событие: ${esc(event)}`,
     `Время: ${esc(timeText)}`,
   ];
+  if (branding) lines.push(`Брендирование: ${esc(branding)}`);
   if (brand || color) lines.push(`Бренд: ${esc(brand || '-')}${color ? ` / цвет ${esc(color)}` : ''}`);
   if (tag) lines.push(`Хэштег: ${esc(tag)}`);
+  if (wishes) lines.push(`Пожелания: ${esc(wishes)}`);
   if (page) lines.push(`Страница: ${esc(page)}`);
   const text = lines.join('\n');
 
