@@ -118,7 +118,12 @@ export async function onRequestPost({ request, env }) {
   if (page) lines.push(`Страница: ${esc(page)}`);
   const text = lines.join('\n');
 
-  const token = String(env.TELEGRAM_BOT_TOKEN || '').trim();
+  // Достаем сам токен (цифры:буквы), даже если вместе с ним вставили лишний текст,
+  // слово "bot", кавычки или целое сообщение от @BotFather
+  const rawToken = String(env.TELEGRAM_BOT_TOKEN || '');
+  const tokenMatch = rawToken.match(/\d{6,}:[A-Za-z0-9_-]{30,}/);
+  const token = tokenMatch ? tokenMatch[0] : '';
+  if (rawToken.trim() && !token) console.error('TELEGRAM_BOT_TOKEN не похож на токен бота (ожидается вид 123456789:AAH...)');
   const chatId = String(env.TELEGRAM_CHAT_ID || '').trim();
 
   if (!token || !chatId) {
