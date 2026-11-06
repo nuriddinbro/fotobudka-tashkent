@@ -474,6 +474,7 @@ const FRAME_THEMES = [
       name: fName.value.trim(),
       phone: formatPhone(phoneDigits(fPhone.value)),
       date: fDate.value,
+      time: $('#f-time').value,
       event: fEvent.value,
       hours: state.hours,
       price: priceFor(state.hours),
@@ -514,6 +515,7 @@ const FRAME_THEMES = [
     fPhone.value = '';
     fDate.value = '';
     $('#f-wishes').value = '';
+    $('#f-time').value = '';
     success.hidden = true;
     form.hidden = false;
     fName.focus();

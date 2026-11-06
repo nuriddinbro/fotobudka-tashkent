@@ -48,9 +48,9 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap"></noscript>
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="styles.css?v=5">
 <script>document.documentElement.classList.add('js')</script>
-<script src="script.js?v=4" defer></script>
+<script src="script.js?v=5" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -433,6 +433,12 @@
             <input id="f-date" name="date" class="input input--date" type="date">
           </div>
           <div class="field">
+            <label for="f-time">Время начала <span class="field__optional">(необязательно)</span></label>
+            <input id="f-time" name="time" class="input input--date" type="time">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
             <label for="f-event">Событие</label>
             <select id="f-event" name="event" class="input select">
               <option value="Свадьба">Свадьба</option>
@@ -443,13 +449,6 @@
               <option value="Другое">Другое</option>
             </select>
           </div>
-        </div>
-        <!-- Ловушка для спам-ботов: человек это поле не видит и не заполняет -->
-        <div class="hp" aria-hidden="true">
-          <label for="f-website">Сайт</label>
-          <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
-        </div>
-        <div class="field-row">
           <div class="field">
             <label for="f-branding">Брендирование</label>
             <select id="f-branding" name="branding" class="input select">
@@ -458,6 +457,13 @@
               <option value="Без брендирования">Без брендирования</option>
             </select>
           </div>
+        </div>
+        <!-- Ловушка для спам-ботов: человек это поле не видит и не заполняет -->
+        <div class="hp" aria-hidden="true">
+          <label for="f-website">Сайт</label>
+          <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div class="field-row">
           <div class="field">
             <label for="f-hours">Время аренды</label>
             <select id="f-hours" name="hours" class="input select">
@@ -467,7 +473,7 @@
         </div>
         <div class="field">
           <label for="f-wishes">Ваши пожелания <span class="field__optional">(необязательно)</span></label>
-          <textarea id="f-wishes" name="wishes" class="input textarea" rows="3" maxlength="500" placeholder="Место, время начала, количество гостей, идеи для рамки..."></textarea>
+          <textarea id="f-wishes" name="wishes" class="input textarea" rows="3" maxlength="500" placeholder="Место, количество гостей, идеи для рамки..."></textarea>
         </div>
         <div class="summary" id="summary" aria-live="polite">
           <span>Брендирование: <strong id="sum-branding">корпус и рамка</strong></span>
