@@ -93,6 +93,8 @@ export async function onRequestPost({ request, env }) {
   let date = clean(body.date, 10);
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
   date = m ? `${m[3]}.${m[2]}.${m[1]}` : '';
+  const tm = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(String(body.time || ''));
+  if (tm) date = date ? `${date}, начало в ${tm[0]}` : `начало в ${tm[0]}`;
   const event = EVENTS.includes(body.event) ? body.event : 'Другое';
   const hours = Math.round(Number(body.hours));
   const price = Math.round(Number(body.price));
