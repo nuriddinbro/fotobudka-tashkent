@@ -140,8 +140,10 @@ export async function onRequestPost({ request, env }) {
     });
     const data = await tg.json().catch(() => ({}));
     if (!tg.ok || !data.ok) {
-      console.error('Telegram ответил ошибкой:', tg.status, data.description || '');
-      return json({ ok: false, error: 'Не удалось отправить в Telegram' }, 502);
+      // Описание ошибки от Telegram (например "chat not found") - без токена, его можно показывать
+      const detail = clean(data.description || `HTTP ${tg.status}`, 200);
+      console.error('Telegram ответил ошибкой:', tg.status, detail);
+      return json({ ok: false, error: 'Не удалось отправить в Telegram', detail }, 502);
     }
   } catch (err) {
     console.error('Нет связи с Telegram:', String(err));
