@@ -1,0 +1,9 @@
+# Секреты для локального теста - никогда не отправлять в GitHub
+.dev.vars
+.env
+# Служебные папки
+node_modules/
+.wrangler/
+__pycache__/
+.DS_Store
+Thumbs.db

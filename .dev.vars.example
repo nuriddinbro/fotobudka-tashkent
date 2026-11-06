@@ -1,0 +1,5 @@
+# Пример файла для локальной проверки с настоящим ботом.
+# Скопируйте этот файл в .dev.vars и впишите значения.
+# Файл .dev.vars не попадает в GitHub (он в .gitignore).
+TELEGRAM_BOT_TOKEN=123456789:ABCdefGhIJKlmnoPQRstuVWXyz
+TELEGRAM_CHAT_ID=-1001234567890
