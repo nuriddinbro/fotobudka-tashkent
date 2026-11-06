@@ -34,7 +34,7 @@ const PRICE_PER_HOUR = 600000;  // за каждый час
 Также поправьте в `public/index.html` фразу «Каждый следующий час +600 000 сум» и стартовые числа «2 800 000» (то, что видно до загрузки скрипта).
 
 ### Ссылку на Instagram
-`public/script.js`, строка `const INSTAGRAM_URL = 'https://instagram.com/ИМЯ_АККАУНТА';` - впишите свой аккаунт.
+`public/script.js`, строка `const INSTAGRAM_URL = 'https://www.instagram.com/fotobudka_tashkent';`.
 
 ### Название PIXO
 1. `public/script.js` → `const BRAND_NAME = 'Fotobudka Tashkent';` (логотип, фотополоска, подвал).
@@ -75,7 +75,7 @@ npx wrangler pages dev public
 - Framework preset: **None**
 - Build command: *(пусто)*
 - Build output directory: **public**
-- Переменные (Settings → Variables and Secrets, тип **Secret**): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`. После добавления - **Deployments → Retry deployment**.
+- Переменные (Settings → Variables and Secrets, тип **Secret**): `TELEGRAM_BOT_TOKEN` (токен вида `123456789:AAH...`), `TELEGRAM_CHAT_ID` (один или несколько ID через запятую, например `123456789, 987654321` - заявка придет каждому; каждый получатель должен один раз нажать Start у бота). После добавления - **Deployments → Retry deployment**.
 
 Важно: на настоящем сайте без этих переменных форма покажет «Не удалось отправить. Напишите нам в Telegram» - заявки молча не теряются.
 
