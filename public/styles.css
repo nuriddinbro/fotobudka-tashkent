@@ -127,6 +127,19 @@ button, input, select { font: inherit; }
 .nav a { color: var(--muted); text-decoration: none; padding: 10px 0; transition: color .2s ease; }
 .nav a:hover { color: var(--text); }
 .header__actions { display: flex; align-items: center; gap: 10px; }
+.icon-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--text);
+  display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  transition: border-color .2s ease, color .2s ease;
+}
+.icon-btn:hover { color: var(--gold); border-color: var(--gold); }
+.nav__insta { display: none; }
+@media (max-width: 767px) {
+  .nav .nav__insta { display: block; color: var(--gold); }
+}
+@media (max-width: 480px) {
+  .header__actions .icon-btn { display: none; } /* на узком экране Instagram - в меню */
+}
 .burger {
   display: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2);
   background: transparent; cursor: pointer; padding: 0; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
