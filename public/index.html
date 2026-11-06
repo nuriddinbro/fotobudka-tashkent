@@ -48,9 +48,9 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap"></noscript>
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=4">
 <script>document.documentElement.classList.add('js')</script>
-<script src="script.js?v=3" defer></script>
+<script src="script.js?v=4" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -449,13 +449,33 @@
           <label for="f-website">Сайт</label>
           <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
         </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-branding">Брендирование</label>
+            <select id="f-branding" name="branding" class="input select">
+              <option value="Корпус и рамка">Корпус и рамка</option>
+              <option value="Только рамка">Только рамка</option>
+              <option value="Без брендирования">Без брендирования</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-hours">Время аренды</label>
+            <select id="f-hours" name="hours" class="input select">
+              <!-- варианты (2-8 часов с ценой) добавляет script.js -->
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-wishes">Ваши пожелания <span class="field__optional">(необязательно)</span></label>
+          <textarea id="f-wishes" name="wishes" class="input textarea" rows="3" maxlength="500" placeholder="Место, время начала, количество гостей, идеи для рамки..."></textarea>
+        </div>
         <div class="summary" id="summary" aria-live="polite">
-          <span>Брендирование: <strong>корпус и рамка</strong></span>
+          <span>Брендирование: <strong id="sum-branding">корпус и рамка</strong></span>
           <span>Время: <strong id="sum-time">4 часа - 2 800 000 сум</strong></span>
           <span class="summary__brand" id="sum-brand" hidden>Ваш бренд: <strong id="sum-brand-text"></strong></span>
         </div>
         <button type="submit" class="btn btn--gold btn--lg btn--block" id="submit">Отправить заявку</button>
-        <p class="form__note">Время можно поменять в калькуляторе выше - заявка подхватит выбор.</p>
+        <p class="form__note">Время и брендирование можно выбрать прямо здесь или в калькуляторе выше.</p>
         <div class="form__error" id="form-error" role="alert" hidden>
           <p>Не удалось отправить. Напишите нам в Telegram</p>
           <a href="https://t.me/A7i77" class="btn btn--light btn--sm" target="_blank" rel="noopener">Открыть Telegram</a>

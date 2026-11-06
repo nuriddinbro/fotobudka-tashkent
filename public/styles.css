@@ -259,6 +259,8 @@ button, input, select { font: inherit; }
   background-repeat: no-repeat; background-position: right 16px center;
 }
 .field__error { margin: 0; font-size: 13px; color: #FCA5A5; }
+.field__optional { font-weight: 500; color: var(--muted); }
+.textarea { min-height: 96px; padding: 14px 16px; line-height: 1.5; resize: vertical; }
 
 /* ---------- Брендирование ---------- */
 .brand-grid { display: flex; flex-wrap: wrap; gap: 48px; align-items: stretch; }

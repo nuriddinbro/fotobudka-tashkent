@@ -359,9 +359,23 @@ const FRAME_THEMES = [
   const sumTime = $('#sum-time');
   const sumBrand = $('#sum-brand');
   const sumBrandText = $('#sum-brand-text');
+  const fHours = $('#f-hours');
+  const fBranding = $('#f-branding');
+  const sumBranding = $('#sum-branding');
+
+  // Варианты времени в форме заявки: 2-8 часов с ценой
+  for (let h = Number(hoursInput.min); h <= Number(hoursInput.max); h++) {
+    const o = document.createElement('option');
+    o.value = String(h);
+    o.textContent = `${h} ${hoursWord(h)} - ${formatNumber(priceFor(h))} сум`;
+    fHours.appendChild(o);
+  }
 
   function setHours(h) {
     state.hours = h;
+    // калькулятор и форма всегда показывают одно и то же время
+    hoursInput.value = String(h);
+    fHours.value = String(h);
     const word = `${h} ${hoursWord(h)}`;
     hoursLabel.textContent = `${word} аренды`;
     priceText.textContent = formatNumber(priceFor(h));
@@ -378,11 +392,14 @@ const FRAME_THEMES = [
   }
   function updateSummary() {
     sumTime.textContent = `${state.hours} ${hoursWord(state.hours)} - ${formatNumber(priceFor(state.hours))} сум`;
+    sumBranding.textContent = fBranding.value.toLowerCase();
     const b = brandSummary();
     sumBrand.hidden = !b;
     sumBrandText.textContent = b;
   }
   hoursInput.addEventListener('input', () => setHours(Number(hoursInput.value)));
+  fHours.addEventListener('change', () => setHours(Number(fHours.value)));
+  fBranding.addEventListener('change', updateSummary);
   $('#book-hours').addEventListener('click', () => {
     summary.classList.remove('is-updated');
     void summary.offsetWidth;
@@ -460,6 +477,8 @@ const FRAME_THEMES = [
       event: fEvent.value,
       hours: state.hours,
       price: priceFor(state.hours),
+      branding: fBranding.value,
+      wishes: $('#f-wishes').value.trim(),
       brand: state.brandName,
       tag: state.brandTag,
       color: state.brandColorPicked ? state.brandColor : '',
@@ -494,6 +513,7 @@ const FRAME_THEMES = [
     fName.value = '';
     fPhone.value = '';
     fDate.value = '';
+    $('#f-wishes').value = '';
     success.hidden = true;
     form.hidden = false;
     fName.focus();
