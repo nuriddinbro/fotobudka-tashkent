@@ -14,7 +14,12 @@ SRC = os.path.join(ROOT, "originals")
 OUT = os.path.join(ROOT, "public", "img")
 PUBLIC = os.path.join(ROOT, "public")
 
-BRAND = "Fotobudka Tashkent"  # название на картинке для соцсетей
+# Тексты на картинке для соцсетей (превью ссылки в Telegram, Instagram и т.д.)
+HEADLINE = ("Аренда фотобудки", "в Ташкенте")
+PRICE_LINE = "от 1 600 000 сум"
+PRICE_NOTE = "за 2 часа"
+INCLUDED = ("Безлимитная печать фотополосок", "Брендирование под ваш бренд", "Оператор и монтаж включены")
+SITE = "fotobudki.uz"
 GOLD = (232, 180, 74)
 BG = (11, 11, 12)
 
@@ -87,20 +92,26 @@ def build_og():
         og.paste(rp, (x, y), rp)
 
     d = ImageDraw.Draw(og)
-    # Название: по словам в строки, размер шрифта подбирается под ширину
-    words = BRAND.split()
-    lines = [" ".join(words[: (len(words) + 1) // 2]), " ".join(words[(len(words) + 1) // 2:])] if len(words) > 1 else [BRAND]
-    size = 120
-    while size > 40 and max(d.textlength(l, font=font(size)) for l in lines) > 470:
-        size -= 4
-    y = 250 - size * len(lines) // 2 - 20
-    d.ellipse((76, y + size * 0.42, 76 + size * 0.3, y + size * 0.72), fill=GOLD)
-    for l in lines:
-        d.text((76 + size * 0.45, y), l, font=font(size), fill=(244, 244, 245))
-        y += int(size * 1.1)
-    d.text((76, 360), "Аренда фотобудки", font=font(52), fill=(244, 244, 245))
-    d.text((76, 425), "в Ташкенте", font=font(52), fill=GOLD)
-    d.text((78, 520), "Безлимитная печать · брендирование · оператор", font=font_text(26), fill=(161, 161, 170))
+    WHITE, GREY = (244, 244, 245), (161, 161, 170)
+    MAX_W = 540  # левая колонка, правее - фото
+    # Заголовок в 2 строки, размер подбирается под ширину колонки
+    size = 78
+    while size > 40 and d.textlength(HEADLINE[0], font=font(size)) > MAX_W:
+        size -= 2
+    y = 70
+    d.text((76, y), HEADLINE[0], font=font(size), fill=WHITE)
+    d.text((76, y + int(size * 1.12)), HEADLINE[1], font=font(size), fill=GOLD)
+    # Цена
+    y = 285
+    d.text((76, y), PRICE_LINE, font=font(50), fill=WHITE)
+    d.text((78, y + 66), PRICE_NOTE, font=font_text(30), fill=GREY)
+    # Что входит
+    y = 440
+    for line in INCLUDED:
+        d.ellipse((78, y + 13, 90, y + 25), fill=GOLD)
+        d.text((104, y), line, font=font_text(28), fill=WHITE)
+        y += 44
+    d.text((W - 76 - d.textlength(SITE, font=font_text(26)), H - 58), SITE, font=font_text(26), fill=GOLD)
     og.save(os.path.join(PUBLIC, "og-image.jpg"), "JPEG", quality=85, optimize=True, progressive=True)
     print("og-image.jpg")
 
@@ -116,6 +127,10 @@ def build_icons():
 
 
 if __name__ == "__main__":
+    # python tools/build_images.py --og  - пересобрать только картинку для соцсетей
+    if "--og" in sys.argv:
+        build_og()
+        sys.exit()
     build_photos()
     build_og()
     build_icons()
