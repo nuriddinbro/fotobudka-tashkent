@@ -52,10 +52,10 @@ const STRIP_SETS = [
 
 /* Темы рамок в блоке "Собери свою рамку" */
 const FRAME_THEMES = [
-  { id: 'wedding',    label: 'Свадьба',       title: 'Wedding day',       bg: '#F5F1EA', fg: '#2B2620', accent: '#B08A3E', photos: ['wedding', 'loreal', 'wedding'] },
-  { id: 'birthday',   label: 'День рождения', title: 'С днем рождения!',  bg: '#E8B44A', fg: '#0B0B0C', accent: '#0B0B0C', photos: ['lavina', 'loreal', 'evos'] },
-  { id: 'corporate',  label: 'Корпоратив',    title: '[ВАШ ЛОГОТИП]',     bg: '#0B0B0C', fg: '#F4F4F5', accent: '#E8B44A', photos: ['bosch', 'darkside', 'asu'] },
-  { id: 'graduation', label: 'Выпускной',     title: 'Graduation 2026',   bg: '#0E1A2B', fg: '#E4E4E7', accent: '#E8B44A', photos: ['graduation', 'lavina', 'bosch'] },
+  { id: 'wedding',    label: 'Свадьба',       title: 'Wedding day',       bg: '#F5F1EA', fg: '#2B2620', accent: '#B08A3E', photos: ['wedding-day', 'loreal-strips', 'lavina'] },
+  { id: 'birthday',   label: 'День рождения', title: 'С днем рождения!',  bg: '#E8B44A', fg: '#0B0B0C', accent: '#0B0B0C', photos: ['lavina', 'evos-buxoro', 'darkside'] },
+  { id: 'corporate',  label: 'Корпоратив',    title: '[ВАШ ЛОГОТИП]',     bg: '#0B0B0C', fg: '#F4F4F5', accent: '#E8B44A', photos: ['bosch', 'leading', 'asu-marathon'] },
+  { id: 'graduation', label: 'Выпускной',     title: 'Graduation 2026',   bg: '#0E1A2B', fg: '#E4E4E7', accent: '#E8B44A', photos: ['asu-marathon', 'darkside', 'wedding-day'] },
 ];
 
 /* ========================================================= */
@@ -93,21 +93,12 @@ const FRAME_THEMES = [
     const r = parseInt(h.substr(0, 2), 16), g = parseInt(h.substr(2, 2), 16), b = parseInt(h.substr(4, 2), 16);
     return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? '#0B0B0C' : '#FFFFFF';
   }
-  /* Меняет картинку внутри <picture> на кадр из img/strip/ */
   /* Меняет картинку внутри <picture> на профессиональное фото из img/gallery/ */
   function setGalleryPicture(picture, stem) {
     $('source', picture).srcset = `img/gallery/${stem}-600.webp 600w, img/gallery/${stem}-1200.webp 1200w`;
     const img = $('img', picture);
     img.srcset = `img/gallery/${stem}-600.jpg 600w, img/gallery/${stem}-1200.jpg 1200w`;
     img.src = `img/gallery/${stem}-600.jpg`;
-  }
-  function setStripPicture(picture, stem) {
-    const webp = `img/strip/${stem}-320.webp 320w, img/strip/${stem}-640.webp 640w`;
-    const jpg = `img/strip/${stem}-320.jpg 320w, img/strip/${stem}-640.jpg 640w`;
-    $('source', picture).srcset = webp;
-    const img = $('img', picture);
-    img.srcset = jpg;
-    img.src = `img/strip/${stem}-320.jpg`;
   }
 
   /* ---------- Название и ссылки ---------- */
@@ -343,7 +334,7 @@ const FRAME_THEMES = [
     photoStrip.style.setProperty('--ffg', t.fg);
     photoStrip.style.setProperty('--facc', t.accent);
     psTitle.textContent = t.title;
-    framePictures.forEach((p, i) => setStripPicture(p, t.photos[i]));
+    framePictures.forEach((p, i) => setGalleryPicture(p, t.photos[i]));
     $$('.chip', chips).forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.id === t.id)));
   }
   FRAME_THEMES.forEach((t) => {
