@@ -48,11 +48,11 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap"></noscript>
-<link rel="stylesheet" href="styles.css?v=51">
+<link rel="stylesheet" href="styles.css?v=68">
 <script>document.documentElement.classList.add('js');try{if(localStorage.getItem('fb-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}
 /* заставка - один раз за визит и не для тех, кто отключил анимации */
 try{if(!sessionStorage.getItem('fb-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('has-intro')}catch(e){}</script>
-<script src="script.js?v=25" defer></script>
+<script src="script.js?v=43" defer></script>
 <!-- Библиотеки анимаций (бесплатные, с открытым кодом):
      GSAP + ScrollTrigger - анимации при прокрутке, Lenis - плавная прокрутка.
      Если какая-то не загрузится, сайт работает как обычно, просто без этих эффектов. -->
@@ -91,6 +91,8 @@ try{if(!sessionStorage.getItem('fb-intro')&&!matchMedia('(prefers-reduced-motion
   </a>
   <!-- Меню-"капсула" по центру: кнопка "Меню" + сколько страницы пролистано -->
   <div class="pill-wrap">
+    <!-- Кошка выглядывает из-под капсулы меню (только компьютер). Анимация: "Le Petit Chat Noir", Tom Fabre, LottieFiles, Lottie Simple License -->
+    <div class="cat-peek" aria-hidden="true"><canvas class="cat-peek__cv"></canvas></div>
     <div class="pill">
       <button type="button" class="burger pill__menu" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
         <span class="pill__icon" aria-hidden="true"><span></span><span></span><span></span></span>
@@ -632,10 +634,14 @@ try{if(!sessionStorage.getItem('fb-intro')&&!matchMedia('(prefers-reduced-motion
     </nav>
     <div class="foot__contacts">
       <p class="foot__label">Связаться</p>
+      <!-- Кошка спит на кнопке Telegram и просыпается от мыши/касания. Анимация: "Silhouette Cat", Yu Toucan, LottieFiles, Lottie Simple License -->
+      <div class="foot__catspot">
+      <canvas class="foot-cat" aria-label="Кошка спит. Наведите или нажмите - проснется" role="img"></canvas>
       <a class="foot__pill" href="https://t.me/A7i77" target="_blank" rel="noopener">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"/><path d="M9 13l12-9"/></svg>
         <span>Telegram<small>@A7i77</small></span>
       </a>
+      </div>
       <a class="foot__pill" href="https://www.instagram.com/fotobudka_tashkent" data-instagram target="_blank" rel="noopener">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></svg>
         <span>Instagram<small>@fotobudka_tashkent</small></span>

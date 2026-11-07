@@ -1531,3 +1531,20 @@ main, .foot { overflow-x: clip; }
 [data-theme="dark"] .inc--bonus *:not(.bonus__tag) { color: #111113; }
 [data-theme="dark"] .inc--bonus svg { color: #111113; }
 [data-theme="dark"] .inc--bonus .bonus__tag { background: #111113; color: #F2F2F3; }
+
+/* ===== Кошки - наша фишка (анимации LottieFiles, Lottie Simple License) ===== */
+/* 1) Кошка выглядывает из-под капсулы меню (только компьютер) */
+.pill { position: relative; z-index: 2; }
+.cat-peek { position: absolute; z-index: 1; top: calc(50% + 20px); left: 50%; width: 66px; height: 60px; margin-left: -33px; overflow: hidden; pointer-events: none; display: none; }
+.cat-peek__cv { display: block; width: 66px; height: 117px; transform: scaleY(-1); transform-origin: 50% 0; margin-top: 117px; }
+@media (hover: hover) and (pointer: fine) and (min-width: 768px) { .cat-peek { display: block; } }
+.pill-wrap.is-open .cat-peek { display: none; }
+/* 2) Кошка спит на кнопке Telegram в подвале и просыпается от мыши/касания */
+.foot__contacts { position: relative; }
+.foot__catspot { position: relative; width: fit-content; }
+@media (max-width: 599px) { .foot__catspot { width: 100%; } }
+/* кошка привязана к кнопке. --cat-sink - насколько кошка "проседает" на кнопку: больше число = ниже кошка, меньше = выше */
+.foot-cat { --cat-sink: 15.5px; position: absolute; z-index: 2; right: 30px; bottom: calc(100% - var(--cat-sink)); width: 96px; height: 96px; display: block; cursor: pointer; opacity: 0; transition: opacity .5s ease; }
+.foot-cat.is-ready { opacity: 1; }
+[data-theme="dark"] .foot-cat { filter: invert(1) brightness(.88); }/* кошку в меню можно спугнуть кликом */
+.cat-peek.is-up { pointer-events: auto; cursor: pointer; }

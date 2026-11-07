@@ -232,6 +232,85 @@ const FRAME_THEMES = [
     requestAnimationFrame(drift);
   }
 
+  /* ---------- Кошки - наша фишка (анимации LottieFiles, проигрыватель dotLottie) ----------
+     1) из-под капсулы меню иногда выглядывает черная кошка и смотрит по сторонам (только компьютер);
+     2) в подвале на кнопке Telegram спит кошка-силуэт, от мыши/касания просыпается. */
+  const LOTTIE_URL = 'https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web@0.80.0/+esm';
+  let lottieLib = null;
+  const loadLottie = () => (lottieLib = lottieLib || import(LOTTIE_URL).then((m) => m.DotLottie));
+  const darkNow = () => document.documentElement.dataset.theme === 'dark';
+
+  // 1) Кошка из-под меню
+  const peekBox = $('.cat-peek');
+  const peekOk = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 768px)');
+  if (peekBox && !reduceMotion.matches && peekOk.matches) {
+    let peek = null, peekUntil = 0;
+    const peekOnce = async () => {
+      const wrap = peekBox.closest('.pill-wrap');
+      if (document.hidden || !peekOk.matches || (wrap && wrap.classList.contains('is-open'))) return;
+      if (!peek) {
+        const DotLottie = await loadLottie();
+        peek = new DotLottie({
+          canvas: peekBox.querySelector('canvas'), src: 'img/cats/cat-peek.lottie', autoplay: false, loop: false,
+          layout: { fit: 'contain', align: [0.5, 1] }, renderConfig: { autoResize: true },
+        });
+        await new Promise((r) => peek.addEventListener('load', r));
+        // смотрит 5-8 сек: анимация короче (3 сек), поэтому повторяем ее часть, где кошка уже выглянула и водит глазами
+        peek.addEventListener('complete', () => {
+          if (!peekBox.classList.contains('is-up')) return;
+          if (performance.now() < peekUntil - 1500) { peek.setFrame(30); peek.play(); }
+          else hidePeek(420); // в конце голова остается видна - сами убираем ее под капсулу
+        });
+        window.FB_PEEK_ANIM = peek; // для проверки
+      }
+      peekBox.style.left = (30 + Math.random() * 40) + '%'; // каждый раз из нового места
+      peekBox.style.visibility = '';
+      peekUntil = performance.now() + 5000 + Math.random() * 3000; // смотрит 5-8 сек
+      peek.stop(); peek.play();
+      peekBox.classList.add('is-up');
+    };
+    // кошка уезжает вверх под капсулу и пропадает до следующего раза
+    const hidePeek = (ms) => {
+      if (!peek || !peekBox.classList.contains('is-up')) return;
+      peekBox.classList.remove('is-up');
+      const cv = peekBox.querySelector('canvas');
+      peek.pause();
+      const a = cv.animate([{ translate: '0 0' }, { translate: '0 -70px' }], { duration: ms, easing: 'cubic-bezier(.5,0,.9,.5)', fill: 'forwards' });
+      a.onfinish = () => { peekBox.style.visibility = 'hidden'; peek.stop(); a.cancel(); };
+    };
+    // клик по кошке - пугается и быстро прячется
+    peekBox.addEventListener('click', () => hidePeek(200));
+    const loop = () => { setTimeout(() => { peekOnce().catch(() => {}); loop(); }, 8000 + Math.random() * 7000); }; // каждые 8-15 сек
+    setTimeout(() => peekOnce().catch(() => {}), 5000); // первый раз - через 5 сек
+    loop();
+    window.FB_PEEK = peekOnce; // для проверки
+  }
+
+  // 2) Спящая кошка в подвале
+  const footCat = $('.foot-cat');
+  if (footCat) {
+    const fbox = footCat.closest('.foot__contacts') || footCat.parentElement; // место кошки задано в CSS (.foot__catspot)
+    let started = false;
+    const start = async () => {
+      if (started) return;
+      started = true;
+      try {
+        const DotLottie = await loadLottie();
+        const cat = new DotLottie({
+          canvas: footCat, src: 'img/cats/cat-sleep.lottie', autoplay: true, loop: true,
+          layout: { fit: 'contain', align: [0.5, 1] }, renderConfig: { autoResize: true, freezeOnOffscreen: true },
+          stateMachineId: 'StateMachine1',
+        });
+        cat.addEventListener('load', () => footCat.classList.add('is-ready'));
+        window.FB_FOOTCAT = cat; // для проверки
+      } catch (e) { console.warn('Кошка в подвале не загрузилась:', e); }
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); start(); } }, { rootMargin: '400px' });
+      io.observe(fbox);
+    } else start();
+  }
+
   /* "Забронировать" в шапке тоже чуть-чуть дрейфует (свойство translate - не мешает магниту) */
   const bookBtn = $('.header__actions .btn--sm');
   if (bookBtn && !reduceMotion.matches && !window.matchMedia('(max-width: 767px)').matches) { // на телефоне кнопка скрыта
