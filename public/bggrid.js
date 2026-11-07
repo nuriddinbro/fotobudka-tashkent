@@ -24,8 +24,12 @@ export function initGridBg() {
   const R = touch ? 14 : 18;      // скругление клетки
 
   const resize = () => {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth; H = window.innerHeight;
+    // на телефоне фон рисуем в обычной четкости - тонким линиям этого хватает, а работы в 4-9 раз меньше
+    dpr = touch ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+    const nw = window.innerWidth, nh = window.innerHeight;
+    // на телефоне при прокрутке прячется/появляется адресная строка - из-за этого холст не пересоздаем
+    if (touch && nw === W && Math.abs(nh - H) < 160 && W) return;
+    W = nw; H = touch ? nh + 160 : nh;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   };
@@ -82,10 +86,14 @@ export function initGridBg() {
 
   let last = performance.now();
   let drift = 0;
+  let lastDraw = 0;
   const frame = (now) => {
+    if (document.hidden) { if (!reduceMotion) requestAnimationFrame(frame); return; }
+    // на телефоне фону хватает ~30 кадров в секунду: прокрутке и анимациям сайта остается больше сил
+    if (touch && now - lastDraw < 31) { requestAnimationFrame(frame); return; }
+    lastDraw = now;
     const dt = Math.min((now - last) / 1000, 0.05);
     last = now;
-    if (document.hidden) { if (!reduceMotion) requestAnimationFrame(frame); return; }
     if (!reduceMotion) drift += dt * 14; // медленный дрейф, px/сек
     mouse.x += (mouse.tx - mouse.x) * 0.18;
     mouse.y += (mouse.ty - mouse.y) * 0.18;

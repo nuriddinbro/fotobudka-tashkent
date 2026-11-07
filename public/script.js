@@ -234,7 +234,7 @@ const FRAME_THEMES = [
 
   /* "Забронировать" в шапке тоже чуть-чуть дрейфует (свойство translate - не мешает магниту) */
   const bookBtn = $('.header__actions .btn--sm');
-  if (bookBtn && !reduceMotion.matches) {
+  if (bookBtn && !reduceMotion.matches && !window.matchMedia('(max-width: 767px)').matches) { // на телефоне кнопка скрыта
     const B = { x: 3, y: 2.2 };
     let c = { x: 0, y: 0 }, v = { x: 0, y: 0 }, tg = { x: 0, y: 0 };
     const pick = () => {

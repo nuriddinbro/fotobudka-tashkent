@@ -14,5 +14,5 @@ try {
 if (mode === 'cubes') {
   import('./bg3d.js?v=13').then((m) => m.initCubesBg()).catch((e) => console.warn('Фон с кубиками отключен:', e));
 } else {
-  import('./bggrid.js?v=2').then((m) => m.initGridBg()).catch((e) => console.warn('Фон-сетка отключен:', e));
+  import('./bggrid.js?v=3').then((m) => m.initGridBg()).catch((e) => console.warn('Фон-сетка отключен:', e));
 }

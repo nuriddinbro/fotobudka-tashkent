@@ -1442,3 +1442,68 @@ select.select option { font-family: var(--body); font-size: 15px; }
   .foot__pill { min-width: 0; width: 100%; }
   .foot__bottom { flex-direction: column; gap: 4px; }
 }
+/* ===== Телефон: шапка не шире экрана (капсула меню больше не уезжает вправо) ===== */
+@media (max-width: 767px) {
+  .header { gap: 8px; }
+  .pill-wrap { position: relative; left: auto; top: auto; transform: none; margin-left: auto; flex: 0 0 auto; }
+  .pill-wrap .nav { left: auto; right: 0; margin-left: 0; width: min(340px, calc(100vw - 32px)); }
+  .logo { min-width: 0; overflow: hidden; }
+}
+@media (max-width: 400px) {
+  .pill { gap: 4px; padding: 4px; }
+  .pill .burger.pill__menu { padding: 0 12px 0 10px; gap: 8px; }
+  .pill__pct { min-width: 48px; padding: 0 6px; font-size: 12px; }
+}
+
+/* ===== Телефон и планшет: без размытия фона под панелями (главная причина тормозов) ===== */
+@media (hover: none), (max-width: 767px) {
+  #booths, #egrid, #brands, #price, .included {
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    background: rgba(250, 250, 248, .93);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .9) inset, 0 12px 30px rgba(0, 0, 0, .07);
+  }
+  [data-theme="dark"] #booths, [data-theme="dark"] #egrid, [data-theme="dark"] #brands, [data-theme="dark"] #price, [data-theme="dark"] .included {
+    background: rgba(27, 27, 31, .94);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .05) inset, 0 12px 30px rgba(0, 0, 0, .35);
+  }
+  .pill { -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
+/* ничего не вылезает за правый край экрана (иначе телефон уменьшает всю страницу) */
+main, .foot { overflow-x: clip; }
+
+/* ===== Телефон: аккуратные мелочи ===== */
+@media (max-width: 599px) {
+  /* кольцо из фото: снимки чуть меньше и дальше от центра, подпись в 2 строки - ничего не налезает */
+  .ring { --size: min(560px, 88vw); }
+  .ring__item { width: calc(var(--size) * .19); height: calc(var(--size) * .19);
+    transform: translate(-50%, -50%) rotate(calc(var(--i) * 45deg)) translateY(calc(var(--size) * -.4)) rotate(calc(var(--i) * -45deg)); }
+  .ring__center { gap: 8px; }
+  .ring__cap { font-size: 12px; white-space: normal; text-align: center; max-width: calc(var(--size) * .42); line-height: 1.3; }
+  /* названия брендов помещаются в плитку */
+  .brand__name { font-size: 20px; overflow-wrap: anywhere; hyphens: auto; }
+  /* кнопка "Забронировать на 4 часа" целиком */
+  .calc .btn--lg, #book-hours { font-size: 15px; padding: 0 16px; }
+  .foot__big { font-size: 12vw; }
+}
+@media (max-width: 767px) {
+  .logo { overflow: visible; flex: 0 1 auto; }
+  .logo .logo__text { font-size: 13.5px; }
+}
+
+/* ===== Телефон: капсулы шапки компактнее (логотип и меню) ===== */
+@media (max-width: 767px) {
+  :root { --cap-h: 38px; }
+  .logo { padding: 0 12px 0 10px; gap: 8px; }
+  .logo .logo__text { font-size: 12px; line-height: 1.12; }
+  .pill { gap: 2px; padding: 3px; }
+  .pill .burger.pill__menu { padding: 0 10px 0 8px; gap: 6px; font-size: 13px; }
+  .pill__icon, .pill .pill__icon span { width: 15px; }
+  .pill__theme { width: 30px; }
+  .pill__pct { min-width: 42px; padding: 0 6px; font-size: 11.5px; }
+  .pill .burger.pill__menu, .pill__theme, .pill__pct { height: calc(var(--cap-h) - 6px); }
+}
+@media (max-width: 599px) {
+  .brand__name { font-size: 17px; overflow-wrap: normal; hyphens: manual; }
+}
+@media (max-width: 599px) { .brand { padding: 22px 16px; } .brand__name { font-size: 16px; } }
