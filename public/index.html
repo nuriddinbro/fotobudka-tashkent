@@ -10,7 +10,7 @@
      ============================================================ -->
 <title>Аренда фотобудки в Ташкенте | fotobudkatashkent.uz</title>
 <meta name="description" content="Аренда фотобудки в Ташкенте: безлимитная печать фотополосок, брендирование корпуса и рамки под ваш бренд, оператор, монтаж. Свадьбы, дни рождения, корпоративы, выпускные. От 2 часов. Выезжаем во все регионы Узбекистана.">
-<meta name="theme-color" content="#0B0B0C">
+<meta name="theme-color" content="#F1F0ED">
 <link rel="canonical" href="https://fotobudkatashkent.uz/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="fotobudkatashkent.uz">
@@ -48,33 +48,80 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap"></noscript>
-<link rel="stylesheet" href="styles.css?v=5">
-<script>document.documentElement.classList.add('js')</script>
-<script src="script.js?v=5" defer></script>
+<link rel="stylesheet" href="styles.css?v=43">
+<script>document.documentElement.classList.add('js');try{if(localStorage.getItem('fb-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}
+/* заставка - один раз за визит и не для тех, кто отключил анимации */
+try{if(!sessionStorage.getItem('fb-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('has-intro')}catch(e){}</script>
+<script src="script.js?v=24" defer></script>
+<!-- Библиотеки анимаций (бесплатные, с открытым кодом):
+     GSAP + ScrollTrigger - анимации при прокрутке, Lenis - плавная прокрутка.
+     Если какая-то не загрузится, сайт работает как обычно, просто без этих эффектов. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
+<script type="module" src="fx.js?v=16"></script>
+<!-- Фон: сетка с искрами (запасной вариант - 3D-кубики, см. bg.js) -->
+<script type="module" src="bg.js?v=2"></script>
 </head>
 <body>
+<!-- Заставка при открытии: счетчик 0-100, затвор камеры, вспышка (script.js). Сама исчезает через 4 сек, даже если скрипт не загрузился -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__shutter intro__shutter--top"></div>
+  <div class="intro__shutter intro__shutter--bot"></div>
+  <div class="intro__center">
+    <span class="intro__dot"></span>
+    <span class="intro__brand">Fotobudka Tashkent</span>
+    <span class="intro__count" id="intro-count">0</span>
+    <span class="intro__bar"><i id="intro-bar"></i></span>
+  </div>
+</div>
 <a class="skip-link" href="#main">Перейти к содержанию</a>
+<!-- Мягкие блики света на фоне (как свет софитов в студии) -->
+<div class="glow" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas class="bg3d" id="bg3d" aria-hidden="true"></canvas>
 <div class="flash" id="flash" hidden></div>
 
 <!-- ===================== ШАПКА ===================== -->
+<div class="header-bar" id="header-bar">
 <header class="header">
   <a href="#top" class="logo" aria-label="Fotobudka Tashkent - в начало страницы">
     <span class="logo__dot" aria-hidden="true"></span>
     <span class="logo__text" data-brand>Fotobudka Tashkent</span>
   </a>
-  <nav class="nav" id="nav" aria-label="Разделы">
-    <a href="#booths">Брендирование</a>
-    <a href="#gallery">Галерея</a>
-    <a href="#frame">Рамки</a>
-    <a href="#price">Цены</a>
-  </nav>
+  <!-- Меню-"капсула" по центру: кнопка "Меню" + сколько страницы пролистано -->
+  <div class="pill-wrap">
+    <div class="pill">
+      <button type="button" class="burger pill__menu" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+        <span class="pill__icon" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="pill__label">Меню</span>
+      </button>
+      <!-- светлая / темная тема (выбор запоминается) -->
+      <button type="button" class="pill__theme" id="theme-toggle" aria-label="Темная тема" aria-pressed="false">
+        <svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <svg class="i-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <span class="pill__pct" id="pct" aria-hidden="true">0%</span>
+    </div>
+    <!-- Меню раскрывается из капсулы вниз, как панель -->
+    <nav class="nav" id="nav" aria-label="Разделы">
+      <p class="nav__label">Меню</p>
+      <a href="#booths">Брендирование</a>
+      <a href="#egrid">Фото с событий</a>
+      <a href="#gallery">Галерея</a>
+      <a href="#frame">Рамки</a>
+      <a href="#price">Цены</a>
+      <a href="#book">Заявка</a>
+      <p class="nav__label nav__label--sep">Связаться</p>
+      <a href="#contacts" class="nav__small">Контакты</a>
+    </nav>
+  </div>
   <div class="header__actions">
     <a href="#book" class="btn btn--light btn--sm">Забронировать</a>
-    <button type="button" class="burger" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
-      <span></span><span></span><span></span>
-    </button>
   </div>
 </header>
+<div class="progress" id="progress" aria-hidden="true"></div>
+</div>
 
 <main id="main">
 
@@ -82,7 +129,7 @@
 <section id="top" class="hero wrap">
   <div class="hero__text">
     <p class="eyebrow">Фотобудка в аренду - Ташкент и регионы Узбекистана</p>
-    <h1 class="hero__title">Лови<br>момент.</h1>
+    <h1 class="hero__title"><span class="w"><span>Лови</span></span><br><span class="w"><span class="gold">момент.</span></span></h1>
     <p class="hero__lead">Гости делают снимки и через секунды держат в руках готовую фотополоску. Свадьбы, дни рождения, корпоративы, выпускные и промо-мероприятия.</p>
     <div class="btn-row">
       <button type="button" class="btn btn--gold btn--lg" id="shoot">
@@ -93,13 +140,13 @@
     </div>
     <div class="stats">
       <div class="stat"><span class="stat__num">∞</span><span class="stat__label">печать без лимита</span></div>
-      <div class="stat"><span class="stat__num">100%</span><span class="stat__label">под ваш бренд</span></div>
+      <div class="stat"><span class="stat__num"><span data-count="100">100</span>%</span><span class="stat__label">под ваш бренд</span></div>
       <div class="stat"><span class="stat__num">от 2 ч</span><span class="stat__label">минимальная аренда</span></div>
     </div>
   </div>
 
   <div class="hero__booth">
-    <div class="booth" aria-hidden="true">
+    <div class="booth" id="booth" aria-hidden="true">
       <div class="booth__halo"></div>
       <div class="booth__body"></div>
       <div class="booth__cam"></div>
@@ -145,18 +192,49 @@
   </div>
 </div>
 
+<!-- ===================== ЭЛАСТИЧНАЯ СЕТКА ФОТО =====================     Прием из открытого демо Codrops "Elastic Grid Scroll" (лицензия MIT):
+     колонки фото при прокрутке едут с разной задержкой (fx.js). Фото - из img/gallery/. -->
+<section class="egrid wrap" id="egrid" aria-label="Фото с наших событий">
+  <div class="egrid__text">
+    <p class="eyebrow">Живые эмоции</p>
+    <h2 class="h2">Каждый гость уходит <span class="tone">со своим кадром</span></h2>
+    <p class="section__lead">Свадьбы, дни рождения, корпоративы и запуски брендов - печатаем фото за секунды прямо на событии.</p>
+    <a href="#book" class="btn btn--gold btn--lg">Забронировать дату</a>
+  </div>
+  <!-- Хоровод фото: медленно вращается по кругу (по мотивам fourmula.ai). Фото - из img/gallery/ -->
+  <div class="ring" id="ring">
+    <div class="ring__rot" aria-hidden="true">
+        <figure class="ring__item" style="--i:0;--tilt:45deg"><span class="ring__upright"><span class="ring__shape"><img src="img/gallery/wedding-day-600.jpg" alt="" loading="lazy" decoding="async"></span></span></figure>
+        <figure class="ring__item" style="--i:1;--tilt:0deg"><span class="ring__upright"><span class="ring__shape"><img src="img/gallery/bosch-600.jpg" alt="" loading="lazy" decoding="async"></span></span></figure>
+        <figure class="ring__item" style="--i:2;--tilt:45deg"><span class="ring__upright"><span class="ring__shape"><img src="img/gallery/lavina-600.jpg" alt="" loading="lazy" decoding="async"></span></span></figure>
+        <figure class="ring__item" style="--i:3;--tilt:0deg"><span class="ring__upright"><span class="ring__shape"><img src="img/gallery/loreal-strips-600.jpg" alt="" loading="lazy" decoding="async"></span></span></figure>
+        <figure class="ring__item" style="--i:4;--tilt:45deg"><span class="ring__upright"><span class="ring__shape"><img src="img/gallery/evos-buxoro-600.jpg" alt="" loading="lazy" decoding="async"></span></span></figure>
+        <figure class="ring__item" style="--i:5;--tilt:0deg"><span class="ring__upright"><span class="ring__shape"><img src="img/gallery/darkside-600.jpg" alt="" loading="lazy" decoding="async"></span></span></figure>
+        <figure class="ring__item" style="--i:6;--tilt:45deg"><span class="ring__upright"><span class="ring__shape"><img src="img/gallery/leading-600.jpg" alt="" loading="lazy" decoding="async"></span></span></figure>
+        <figure class="ring__item" style="--i:7;--tilt:0deg"><span class="ring__upright"><span class="ring__shape"><img src="img/gallery/asu-marathon-600.jpg" alt="" loading="lazy" decoding="async"></span></span></figure>
+    </div>
+    <div class="ring__center">
+      <!-- Нажатие: отсчет 3-2-1, вспышка и переход к форме заявки (script.js) -->
+      <button type="button" class="ring__btn" id="ring-shot" aria-label="Сделать снимок и перейти к заявке">
+        <svg class="ring__cam" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span class="ring__count" aria-hidden="true"></span>
+      </button>
+      <span class="ring__cap" id="ring-cap">Нажми - сделаем снимок</span>
+    </div>
+  </div>
+</section>
 <!-- ===================== БРЕНДИРОВАНИЕ ===================== -->
 <section id="booths" class="section wrap">
   <div class="section__head reveal">
     <div class="section__titles">
       <p class="eyebrow">Брендирование</p>
-      <h2 class="h2">Будка в стиле<br>вашего бренда</h2>
+      <h2 class="h2">Будка в стиле<br><span class="tone">вашего бренда</span></h2>
     </div>
     <p class="section__lead">Оформляем корпус будки и рамку фото под ваш бренд: логотип, фирменные цвета, хэштег. Гости фотографируются - и уносят ваш бренд домой.</p>
   </div>
 
   <div class="brand-grid">
-    <div class="configurator reveal">
+    <div class="configurator reveal" id="configurator">
       <div class="mini-booth" id="mini-booth" aria-hidden="true">
         <div class="mini-booth__body"></div>
         <div class="mini-booth__cam"></div>
@@ -168,9 +246,17 @@
           <span class="mini-booth__name" id="mb-name">ВАШ БРЕНД</span>
           <span class="mini-booth__tag" id="mb-tag">#вашхэштег</span>
         </div>
+        <div class="mini-booth__plain">PHOTO</div>
       </div>
       <div class="configurator__form">
         <p class="configurator__title">Примерьте на себя</p>
+        <!-- Переключатель связан с калькулятором цен: включили здесь - включится и там -->
+        <label class="switch">
+          <input type="checkbox" data-branding-switch>
+          <span class="switch__track" aria-hidden="true"></span>
+          <span class="switch__text">С брендированием будки<span class="switch__note">+1 200 000 сум</span></span>
+        </label>
+        <div class="configurator__brand-fields">
         <div class="field">
           <label for="brand-name">Название компании</label>
           <input id="brand-name" class="input" type="text" maxlength="18" placeholder="Ваш бренд" autocomplete="organization">
@@ -184,21 +270,24 @@
           <div class="swatches" id="swatches">
             <!-- кнопки цветов добавляет script.js (список SWATCHES) -->
             <label class="swatch-custom" id="swatch-custom">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6B70" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
               <input type="color" id="brand-color" value="#c8102e" aria-label="Свой цвет">
             </label>
           </div>
         </fieldset>
+        </div>
       </div>
     </div>
 
     <div class="live reveal">
-      <figure class="live__photo">
+      <!-- Фото меняется переключателем "С брендированием будки":
+           выкл - plain-booth (обычная черная будка), вкл - loreal-booth -->
+      <figure class="live__photo" id="live-photo" data-reveal>
         <picture>
-          <source type="image/webp" srcset="img/gallery/loreal-booth-600.webp 600w, img/gallery/loreal-booth-1200.webp 1200w" sizes="(min-width: 1240px) 560px, (min-width: 960px) 45vw, calc(100vw - 48px)">
-          <img src="img/gallery/loreal-booth-600.jpg" srcset="img/gallery/loreal-booth-600.jpg 600w, img/gallery/loreal-booth-1200.jpg 1200w" sizes="(min-width: 1240px) 560px, (min-width: 960px) 45vw, calc(100vw - 48px)" width="600" height="749" loading="lazy" decoding="async" alt="Будка в брендинге L’Oreal Paris">
+          <source type="image/webp" srcset="img/gallery/plain-booth-600.webp 600w, img/gallery/plain-booth-1200.webp 1200w" sizes="(min-width: 1240px) 560px, (min-width: 960px) 45vw, calc(100vw - 48px)">
+          <img src="img/gallery/plain-booth-600.jpg" srcset="img/gallery/plain-booth-600.jpg 600w, img/gallery/plain-booth-1200.jpg 1200w" sizes="(min-width: 1240px) 560px, (min-width: 960px) 45vw, calc(100vw - 48px)" width="600" height="749" loading="lazy" decoding="async" alt="Фотобудка без брендирования">
         </picture>
-        <figcaption class="live__badge">Вживую: L’Oreal Paris</figcaption>
+        <figcaption class="live__badge" id="live-badge">Без брендирования</figcaption>
       </figure>
       <ol class="steps">
         <li class="step"><span class="step__num">01</span><span class="step__text">Присылаете логотип и цвета</span></li>
@@ -212,8 +301,8 @@
 <!-- ===================== ГАЛЕРЕЯ ===================== -->
 <section id="gallery" class="gallery">
   <div class="wrap gallery__head reveal">
-    <h2 class="h2">Кадры<br>с событий</h2>
-    <p class="gallery__hint">Листай в сторону →</p>
+    <h2 class="h2">Кадры<br><span class="tone">с событий</span></h2>
+    <p class="gallery__hint">Ведите мышкой в сторону →</p>
   </div>
   <div class="gallery__scroller" tabindex="0" aria-label="Фото с событий, листайте в сторону">
     <ul class="gallery__track" id="gallery-track">
@@ -320,9 +409,9 @@
   <div class="section__head reveal">
     <div class="section__titles">
       <p class="eyebrow">Нам доверяют</p>
-      <h2 class="h2">Работаем<br>с брендами</h2>
+      <h2 class="h2">Работаем<br><span class="tone">с брендами</span></h2>
     </div>
-    <p class="section__lead">Международные компании доверяют нам свои события: рамка в фирменном стиле, брендирование корпуса будки, работа оператора от начала до конца.</p>
+    <p class="section__lead brands__lead"><b>L’Oreal, Bosch, KFC и EVOS</b> уже раздавали гостям фото со своим логотипом. <span class="tone-dark">Ваш бренд - следующий.</span></p>
   </div>
   <!-- Плитки брендов строит script.js из списка BRANDS (в начале файла). -->
   <ul class="brands reveal" id="brands-list"></ul>
@@ -333,7 +422,7 @@
   <div class="wrap frame__inner">
     <div class="frame__text reveal">
       <p class="eyebrow eyebrow--dark">Попробуй сам</p>
-      <h2 class="h2">Собери<br>свою рамку</h2>
+      <h2 class="h2">Собери<br><span class="tone">свою рамку</span></h2>
       <p class="frame__lead">Логотип, имена, дата, хэштег и фирменные цвета - рамку делаем под ваше событие. Добавление логотипа входит в стоимость.</p>
       <fieldset class="field field--plain">
         <legend>Событие</legend>
@@ -379,8 +468,9 @@
 <!-- ===================== ЦЕНЫ ===================== -->
 <section id="price" class="section wrap price">
   <div class="price__text reveal">
-    <h2 class="h2">Сколько<br>стоит</h2>
+    <h2 class="h2">Сколько<br><span class="tone">стоит</span></h2>
     <p class="price__lead">Выбери длительность - цена посчитается сразу. Каждый следующий час +600 000 сум.</p>
+    <p class="bonus"><span class="bonus__tag">Бонус</span>Ваш логотип на каждом фото - бесплатно</p>
     <p class="badge">Безналичная оплата - 0% доплаты, без НДС</p>
   </div>
   <div class="calc reveal">
@@ -391,6 +481,11 @@
     <label for="hours" class="sr-only">Количество часов</label>
     <input id="hours" class="range" type="range" min="2" max="8" step="1" value="4" aria-valuetext="4 часа">
     <div class="calc__scale" aria-hidden="true"><span>2 ч</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8 ч</span></div>
+    <label class="switch">
+      <input type="checkbox" data-branding-switch>
+      <span class="switch__track" aria-hidden="true"></span>
+      <span class="switch__text">С брендированием фотобудки<span class="switch__note">Корпус в цветах и с логотипом вашего бренда: +1 200 000 сум</span></span>
+    </label>
     <a href="#book" class="btn btn--gold btn--lg btn--block" id="book-hours">Забронировать на <span id="hours-short">4 часа</span></a>
   </div>
 </section>
@@ -399,11 +494,12 @@
 <section class="wrap included">
   <h2 class="h3 reveal">Уже входит в стоимость</h2>
   <ul class="included__grid reveal">
-    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E8B44A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8c-2.2 0-4 1.8-4 4s1.8 4 4 4c3.5 0 6.5-8 10-8 2.2 0 4 1.8 4 4s-1.8 4-4 4c-3.5 0-6.5-8-10-8z"/></svg><span>Безлимитная печать фотографий</span></li>
-    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E8B44A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span>Оператор на мероприятии</span></li>
-    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E8B44A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/></svg><span>Монтаж и демонтаж оборудования</span></li>
-    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E8B44A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg><span>Все расходные материалы</span></li>
-    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E8B44A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.6-10A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9"/><path d="M12 12v8"/><path d="M9 15l3-3 3 3"/></svg><span>Цифровой архив всех фото после события</span></li>
+    <li class="inc inc--bonus"><span class="bonus__tag">Бонус</span><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg><span>Ваш логотип на каждом фото - бесплатно</span></li>
+    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8c-2.2 0-4 1.8-4 4s1.8 4 4 4c3.5 0 6.5-8 10-8 2.2 0 4 1.8 4 4s-1.8 4-4 4c-3.5 0-6.5-8-10-8z"/></svg><span>Безлимитная печать фотографий</span></li>
+    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span>Оператор на мероприятии</span></li>
+    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/></svg><span>Монтаж и демонтаж оборудования</span></li>
+    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg><span>Все расходные материалы</span></li>
+    <li class="inc"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.6-10A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9"/><path d="M12 12v8"/><path d="M9 15l3-3 3 3"/></svg><span>Цифровой архив всех фото после события</span></li>
   </ul>
 </section>
 
@@ -452,10 +548,22 @@
           <div class="field">
             <label for="f-branding">Брендирование</label>
             <select id="f-branding" name="branding" class="input select">
-              <option value="Корпус и рамка">Корпус и рамка</option>
-              <option value="Только рамка">Только рамка</option>
+              <option value="Только рамка" selected>Логотип на фото (бонус)</option>
+              <option value="Корпус и рамка">Корпус + 1 200 000 сум</option>
               <option value="Без брендирования">Без брендирования</option>
             </select>
+          </div>
+        </div>
+        <!-- Бренд: те же поля, что в блоке "Примерьте на себя" - меняются вместе.
+             Прячутся, если выбрано "Без брендирования". -->
+        <div class="field-row" id="f-brand-row">
+          <div class="field">
+            <label for="f-brand">Бренд / компания <span class="field__optional">(необязательно)</span></label>
+            <input id="f-brand" class="input" type="text" maxlength="18" placeholder="Название для логотипа" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="f-tag">Хэштег или слоган <span class="field__optional">(необязательно)</span></label>
+            <input id="f-tag" class="input" type="text" maxlength="22" placeholder="#вашхэштег" autocomplete="off">
           </div>
         </div>
         <!-- Ловушка для спам-ботов: человек это поле не видит и не заполняет -->
@@ -476,8 +584,8 @@
           <textarea id="f-wishes" name="wishes" class="input textarea" rows="3" maxlength="500" placeholder="Место, количество гостей, идеи для рамки..."></textarea>
         </div>
         <div class="summary" id="summary" aria-live="polite">
-          <span>Брендирование: <strong id="sum-branding">корпус и рамка</strong></span>
-          <span>Время: <strong id="sum-time">4 часа - 2 800 000 сум</strong></span>
+          <span>Брендирование: <strong id="sum-branding">логотип на фото (бонус)</strong></span>
+          <span>Итого: <strong id="sum-time">4 часа - 2 800 000 сум</strong></span>
           <span class="summary__brand" id="sum-brand" hidden>Ваш бренд: <strong id="sum-brand-text"></strong></span>
         </div>
         <button type="submit" class="btn btn--gold btn--lg btn--block" id="submit">Отправить заявку</button>
@@ -489,14 +597,14 @@
       </form>
 
       <div class="success" id="success" hidden>
-        <div class="success__icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0B0B0C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div>
+        <div class="success__icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div>
         <p class="success__title" id="success-title" tabindex="-1">Заявка отправлена</p>
         <p class="success__text">Спасибо, <span id="success-name">друг</span>! Мы скоро с вами свяжемся.</p>
         <button type="button" class="btn btn--ghost btn--sm" id="again">Отправить еще одну</button>
       </div>
     </div>
 
-    <p class="book__or">или напишите напрямую</p>
+    <p class="book__or" id="contacts">или напишите напрямую</p>
     <div class="btn-row btn-row--center">
       <a href="https://t.me/A7i77" class="btn btn--gold btn--lg" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"/><path d="M9 13l12-9"/></svg>Написать в Telegram</a>
       <a href="https://www.instagram.com/fotobudka_tashkent" data-instagram class="btn btn--ghost btn--lg" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></svg>Direct в Instagram</a>
@@ -507,9 +615,42 @@
 
 </main>
 
-<footer class="footer wrap">
-  <span><span data-brand>Fotobudka Tashkent</span> - аренда фотобудки в Ташкенте</span>
-  <span>Telegram: <a href="https://t.me/A7i77" target="_blank" rel="noopener">@A7i77</a> - Instagram: <a href="https://www.instagram.com/fotobudka_tashkent" data-instagram target="_blank" rel="noopener">@fotobudka_tashkent</a> - Телефон: <a href="tel:+998974332211">+998 97 433 22 11</a></span>
+<footer class="foot">
+  <div class="wrap foot__top">
+    <div class="foot__brand">
+      <p class="foot__title">Лови <span class="tone">момент.</span></p>
+      <p class="foot__sub"><span data-brand>Fotobudka Tashkent</span> - аренда фотобудки в Ташкенте и по всему Узбекистану</p>
+    </div>
+    <nav class="foot__nav" aria-label="Разделы сайта">
+      <p class="foot__label">Разделы</p>
+      <a href="#booths">Брендирование</a>
+      <a href="#egrid">Фото с событий</a>
+      <a href="#gallery">Галерея</a>
+      <a href="#frame">Рамки</a>
+      <a href="#price">Цены</a>
+      <a href="#book">Заявка</a>
+    </nav>
+    <div class="foot__contacts">
+      <p class="foot__label">Связаться</p>
+      <a class="foot__pill" href="https://t.me/A7i77" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"/><path d="M9 13l12-9"/></svg>
+        <span>Telegram<small>@A7i77</small></span>
+      </a>
+      <a class="foot__pill" href="https://www.instagram.com/fotobudka_tashkent" data-instagram target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></svg>
+        <span>Instagram<small>@fotobudka_tashkent</small></span>
+      </a>
+      <a class="foot__pill" href="tel:+998974332211">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>
+        <span>Позвонить<small>+998 97 433 22 11</small></span>
+      </a>
+    </div>
+  </div>
+  <div class="foot__big" aria-hidden="true">FOTOBUDKA</div>
+  <div class="wrap foot__bottom">
+    <span>© <span id="foot-year">2026</span> <span data-brand>Fotobudka Tashkent</span></span>
+    <span>fotobudkatashkent.uz</span>
+  </div>
 </footer>
 </body>
 </html>
