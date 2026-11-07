@@ -101,8 +101,13 @@ export async function onRequestPost({ request, env }) {
   const timeText = hours >= 1 && hours <= 24 && price > 0 && price < 1e10
     ? `${hours} ${hoursWord(hours)} - ${formatNumber(price)} сум`
     : 'не выбрано';
-  const BRANDINGS = ['Корпус и рамка', 'Только рамка', 'Без брендирования'];
-  const branding = BRANDINGS.includes(body.branding) ? body.branding : '';
+  // Значения из формы -> понятный текст для Telegram
+  const BRANDINGS = {
+    'Только рамка': 'логотип на фото (бонус, бесплатно)',
+    'Корпус и рамка': 'корпус + логотип на фото (+1 200 000 сум, уже в итоге)',
+    'Без брендирования': 'без брендирования',
+  };
+  const branding = BRANDINGS[body.branding] || '';
   // Пожелания: сохраняем переносы строк, остальное чистим, не длиннее 500 символов
   const wishes = String(body.wishes || '')
     .replace(/[\u0000-\u0009\u000B-\u001F\u007F]/g, ' ')
@@ -120,7 +125,7 @@ export async function onRequestPost({ request, env }) {
     `Телефон: ${esc(phone)}`,
     `Дата: ${date ? esc(date) : 'не указана'}`,
     `Событие: ${esc(event)}`,
-    `Время: ${esc(timeText)}`,
+    `Время и итог: ${esc(timeText)}`,
   ];
   if (branding) lines.push(`Брендирование: ${esc(branding)}`);
   if (brand || color) lines.push(`Бренд: ${esc(brand || '-')}${color ? ` / цвет ${esc(color)}` : ''}`);
