@@ -1,12 +1,17 @@
 /**
- * Перенаправляет старый адрес (fotobudka-tashkent.pages.dev) и www.fotobudki.uz
- * на главный адрес https://fotobudki.uz - чтобы в Google был один сайт, а не три.
+ * Перенаправляет все запасные адреса на главный https://fotobudkatashkent.uz
+ * (та же страница, код 301 - Google и Яндекс переносят поиск на главный адрес).
  *
  * Заявки (/api/...) не перенаправляем: если у посетителя открыта старая страница,
  * его заявка все равно должна дойти.
  */
-const MAIN_HOST = 'fotobudki.uz';
-const OLD_HOSTS = ['fotobudka-tashkent.pages.dev', 'www.fotobudki.uz'];
+const MAIN_HOST = 'fotobudkatashkent.uz';
+const OLD_HOSTS = [
+  'www.fotobudkatashkent.uz',
+  'fotobudki.uz',
+  'www.fotobudki.uz',
+  'fotobudka-tashkent.pages.dev',
+];
 
 export async function onRequest({ request, next }) {
   const url = new URL(request.url);
