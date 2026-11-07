@@ -79,8 +79,10 @@ npx wrangler pages dev public
 
 Важно: на настоящем сайте без этих переменных форма покажет «Не удалось отправить. Напишите нам в Telegram» - заявки молча не теряются.
 
-## Домен fotobudki.uz
-- Куплен в ahost.uz. NS-серверы у регистратора: `aitana.ns.cloudflare.com`, `tadeo.ns.cloudflare.com` (DNSSEC выключен).
-- DNS домена управляется в Cloudflare (бесплатный план). Там же TXT-записи для подтверждения в Google Search Console и Яндекс Вебмастере - их не удалять.
-- Cloudflare → проект Pages → **Custom domains**: подключены `fotobudki.uz` и `www.fotobudki.uz`.
-- Адрес сайта прописан в `public/index.html` (верхний блок), `public/robots.txt` и `public/sitemap.xml`. При смене домена поменяйте его в этих трех файлах.
+## Домены
+- Главный адрес: **fotobudkatashkent.uz**. Запасной: **fotobudki.uz** (первый домен сайта) - его тоже обязательно продлевать, по нему сайт уже есть в поиске.
+- Оба куплены в ahost.uz. NS-серверы у регистратора: `aitana.ns.cloudflare.com`, `tadeo.ns.cloudflare.com` (DNSSEC выключен).
+- DNS обоих доменов управляется в Cloudflare (бесплатный план). Там же TXT-записи для подтверждения в Google Search Console и Яндекс Вебмастере - их не удалять.
+- Cloudflare → проект Pages → **Custom domains**: подключены оба домена и их `www`.
+- `functions/_middleware.js` перекидывает www, fotobudki.uz и fotobudka-tashkent.pages.dev на главный адрес (на ту же страницу).
+- Адрес сайта прописан в `public/index.html` (верхний блок), `public/robots.txt`, `public/sitemap.xml`, `functions/_middleware.js` и на картинке для соцсетей (`tools/build_images.py`, строка `SITE`).
