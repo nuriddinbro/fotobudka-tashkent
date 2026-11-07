@@ -1507,3 +1507,27 @@ main, .foot { overflow-x: clip; }
   .brand__name { font-size: 17px; overflow-wrap: normal; hyphens: manual; }
 }
 @media (max-width: 599px) { .brand { padding: 22px 16px; } .brand__name { font-size: 16px; } }
+
+/* ===== Белая будка (без брендирования) в светлой теме: серая подложка и четкий контур, чтобы не сливалась с белой панелью ===== */
+.mini-booth { isolation: isolate; }
+.mini-booth::before {
+  content: ""; position: absolute; z-index: -1; inset: -14px; border-radius: 24px;
+  background: radial-gradient(120% 90% at 50% 40%, #E9E8E4 0%, #DEDDD8 100%);
+  opacity: 0; transition: opacity .4s ease;
+}
+.mini-booth.is-plain::before { opacity: 1; }
+.mini-booth.is-plain .mini-booth__body {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F3F3F1 100%);
+  box-shadow: 0 0 0 1px #CFCDC7, 0 24px 50px rgba(0, 0, 0, .16), 0 6px 14px rgba(0, 0, 0, .06);
+}
+.mini-booth.is-plain .mini-booth__light { box-shadow: 0 0 0 1px #CFCDC7, 0 0 14px rgba(255, 255, 255, .9); }
+.mini-booth.is-plain .mini-booth__plain { color: #8E8C86; }
+/* в темной теме подложка не нужна - белая будка и так видна */
+[data-theme="dark"] .mini-booth::before { display: none; }
+@media (max-width: 599px) { .egrid .h2 { font-size: clamp(26px, 8vw, 34px); } }
+
+/* Бонус-карточка в темной теме: светлая (наоборот к светлой теме), текст хорошо виден */
+[data-theme="dark"] .inc--bonus { background: #F2F2F3; border-color: #F2F2F3; color: #111113; }
+[data-theme="dark"] .inc--bonus *:not(.bonus__tag) { color: #111113; }
+[data-theme="dark"] .inc--bonus svg { color: #111113; }
+[data-theme="dark"] .inc--bonus .bonus__tag { background: #111113; color: #F2F2F3; }

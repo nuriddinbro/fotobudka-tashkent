@@ -137,28 +137,52 @@ function initScrollFx() {
       ctx.drawImage(src, sx, sy, sw, sh, 0, 0, tw, th);   // уменьшенная копия
       ctx.drawImage(canvas, 0, 0, tw, th, 0, 0, w, h);    // растягиваем - получаются крупные пиксели
     };
-    const run = () => {
-      const src = new Image();
-      src.src = img.currentSrc || img.src;
-      const go = () => {
+    // Фото проявляется каждый раз, когда попадает на экран, и снова "рассыпается" на пиксели, когда уходит с экрана
+    let src = null, timer = null, shown = false;
+    const getSrc = (cb) => {
+      const url = img.currentSrc || img.src;
+      if (src && src.dataset.url === url && src.complete && src.naturalWidth) { cb(); return; }
+      src = new Image();
+      src.dataset.url = url;
+      src.onload = cb;
+      src.onerror = () => { img.classList.remove('px-hidden'); canvas.hidden = true; };
+      src.src = url;
+    };
+    const reveal = () => {
+      clearTimeout(timer);
+      getSrc(() => {
         let i = 0;
+        canvas.hidden = false;
+        img.classList.add('px-hidden');
         const step = () => {
           if (i < PX_STEPS.length) {
             draw(src, PX_STEPS[i]);
             i += 1;
-            setTimeout(step, i === 1 ? 300 : 90); // первый шаг держим дольше
+            timer = setTimeout(step, i === 1 ? 300 : 90); // первый шаг держим дольше
           } else {
             img.classList.remove('px-hidden');
-            canvas.remove();
+            canvas.hidden = true;
+            shown = true;
           }
         };
         step();
-      };
-      if (src.complete && src.naturalWidth) go(); else { src.onload = go; src.onerror = () => { img.classList.remove('px-hidden'); canvas.remove(); }; }
+      });
+    };
+    const hide = () => {
+      // вернуть крупные пиксели (незаметно - фото в этот момент уже за краем экрана)
+      clearTimeout(timer);
+      if (!src || !src.naturalWidth) return;
+      shown = false;
+      draw(src, PX_STEPS[0]);
+      canvas.hidden = false;
+      img.classList.add('px-hidden');
     };
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => { if (en.isIntersecting) { io.disconnect(); run(); } });
-    }, { threshold: 0.25 });
+      entries.forEach((en) => {
+        if (en.isIntersecting && en.intersectionRatio >= 0.25) { if (!shown) reveal(); }
+        else if (!en.isIntersecting) hide();
+      });
+    }, { threshold: [0, 0.25] });
     io.observe(box);
   };
   document.querySelectorAll('.egrid__item img, #gallery-track .card__btn img').forEach(pixelLoad);
