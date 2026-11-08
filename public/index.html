@@ -52,7 +52,7 @@
 <script>document.documentElement.classList.add('js');try{if(localStorage.getItem('fb-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}
 /* заставка - один раз за визит и не для тех, кто отключил анимации */
 try{if(!sessionStorage.getItem('fb-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('has-intro')}catch(e){}</script>
-<script src="script.js?v=43" defer></script>
+<script src="script.js?v=44" defer></script>
 <!-- Библиотеки анимаций (бесплатные, с открытым кодом):
      GSAP + ScrollTrigger - анимации при прокрутке, Lenis - плавная прокрутка.
      Если какая-то не загрузится, сайт работает как обычно, просто без этих эффектов. -->
@@ -286,8 +286,8 @@ try{if(!sessionStorage.getItem('fb-intro')&&!matchMedia('(prefers-reduced-motion
            выкл - plain-booth (обычная черная будка), вкл - loreal-booth -->
       <figure class="live__photo" id="live-photo" data-reveal>
         <picture>
-          <source type="image/webp" srcset="img/gallery/plain-booth-600.webp 600w, img/gallery/plain-booth-1200.webp 1200w" sizes="(min-width: 1240px) 560px, (min-width: 960px) 45vw, calc(100vw - 48px)">
-          <img src="img/gallery/plain-booth-600.jpg" srcset="img/gallery/plain-booth-600.jpg 600w, img/gallery/plain-booth-1200.jpg 1200w" sizes="(min-width: 1240px) 560px, (min-width: 960px) 45vw, calc(100vw - 48px)" width="600" height="749" loading="lazy" decoding="async" alt="Фотобудка без брендирования">
+          <source type="image/webp" srcset="img/gallery/plain-booth-600.webp?v=2 600w, img/gallery/plain-booth-1200.webp?v=2 1200w" sizes="(min-width: 1240px) 560px, (min-width: 960px) 45vw, calc(100vw - 48px)">
+          <img src="img/gallery/plain-booth-600.jpg?v=2" srcset="img/gallery/plain-booth-600.jpg?v=2 600w, img/gallery/plain-booth-1200.jpg?v=2 1200w" sizes="(min-width: 1240px) 560px, (min-width: 960px) 45vw, calc(100vw - 48px)" width="600" height="749" loading="lazy" decoding="async" alt="Фотобудка без брендирования">
         </picture>
         <figcaption class="live__badge" id="live-badge">Без брендирования</figcaption>
       </figure>

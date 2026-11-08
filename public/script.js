@@ -112,11 +112,14 @@ const FRAME_THEMES = [
     return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? '#0B0B0C' : '#FFFFFF';
   }
   /* Меняет картинку внутри <picture> на профессиональное фото из img/gallery/ */
+  // ?v=2 у фото будки без бренда: браузеры могли запомнить сломанный ответ (фото кэшируются на 30 дней)
+  const IMG_VER = { 'plain-booth': '?v=2' };
   function setGalleryPicture(picture, stem) {
-    $('source', picture).srcset = `img/gallery/${stem}-600.webp 600w, img/gallery/${stem}-1200.webp 1200w`;
+    const q = IMG_VER[stem] || '';
+    $('source', picture).srcset = `img/gallery/${stem}-600.webp${q} 600w, img/gallery/${stem}-1200.webp${q} 1200w`;
     const img = $('img', picture);
-    img.srcset = `img/gallery/${stem}-600.jpg 600w, img/gallery/${stem}-1200.jpg 1200w`;
-    img.src = `img/gallery/${stem}-600.jpg`;
+    img.srcset = `img/gallery/${stem}-600.jpg${q} 600w, img/gallery/${stem}-1200.jpg${q} 1200w`;
+    img.src = `img/gallery/${stem}-600.jpg${q}`;
   }
 
   /* ---------- Название и ссылки ---------- */
