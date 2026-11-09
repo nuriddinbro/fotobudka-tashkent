@@ -1548,3 +1548,12 @@ main, .foot { overflow-x: clip; }
 .foot-cat.is-ready { opacity: 1; }
 [data-theme="dark"] .foot-cat { filter: invert(1) brightness(.88); }/* кошку в меню можно спугнуть кликом */
 .cat-peek.is-up { pointer-events: auto; cursor: pointer; }
+
+/* ===== Подпись автора в подвале: кошка + by West ===== */
+.foot__by { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; }
+.foot__cat {
+  display: block; width: 20px; height: 16px; background: currentColor; transform-origin: 50% 100%; transition: transform .3s var(--ease-out);
+  -webkit-mask: url("img/cats/cat-mark.svg") center / contain no-repeat; mask: url("img/cats/cat-mark.svg") center / contain no-repeat;
+}
+.foot__by:hover .foot__cat { transform: translateY(-2px) rotate(-6deg); }
+@media (prefers-reduced-motion: reduce) { .foot__cat { transition: none; } .foot__by:hover .foot__cat { transform: none; } }
